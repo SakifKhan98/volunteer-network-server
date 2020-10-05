@@ -26,12 +26,10 @@ client.connect((err) => {
     .db("volunteerNetwork")
     .collection("userActivities");
   const eventsCollection = client.db("volunteerNetwork").collection("events");
-  //   console.log("Database connected");
 
   app.post("/addActivity", (req, res) => {
     const events = req.body;
     eventsCollection.insertOne(events).then((result) => {
-      console.log(result.insertedCount);
       res.send(result.insertedCount);
     });
   });
@@ -45,7 +43,6 @@ client.connect((err) => {
   app.post("/addEvent", (req, res) => {
     const events = req.body;
     eventsCollection.insertOne(events).then((result) => {
-      console.log(result.insertedCount);
       res.send(result.insertedCount);
     });
   });
@@ -71,21 +68,11 @@ client.connect((err) => {
     });
   });
 
-  app.delete("/selectedActivities/:id", (req, res) => {
-    // console.log(req.params.id);
-    userActivitiesCollection.remove({ id: req.params.id }).then((result) => {
-      res.status(200).json({
-        message: "Delete Successfully",
-        deletedData: result,
-      });
+  app.delete("/selectedActivities/:_id", (req, res) => {
+    userActivitiesCollection.deleteOne({ id: req.params.id }).then((result) => {
+      console.log("Deleted Activity Successfully");
     });
   });
-
-  //   app.get("/volunteerRegister/:id", (req, res) => {
-  //     eventsCollection.find({ id: req.params.id }).toArray((err, documents) => {
-  //       res.send(documents[0]);
-  //     });
-  //   });
 });
 
 app.listen(port);
